@@ -17,13 +17,18 @@ and basic DOM parsing.
   - http://en.wikipedia.org/wiki/JSON
   - https://developer.mozilla.org/en-US/docs/JSON
   - https://developer.mozilla.org/en-US/docs/JSON#JSON_in_Firefox_2
-*/
 
++ restler.js
+  - https://github.com/danwrong/restler.js
+*/
+var sys = require('util');
+var restler = require('restler');
 var fs = require('fs');
 var program = require('commander');
 var cheerio = require('cheerio');
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
+var HTTPURL_DEFAULT = "http://www.google.com";
 
 var assertFileExists = function(infile) {
     var instr = infile.toString();
@@ -59,14 +64,39 @@ var clone = function(fn) {
     return fn.bind({});
 };//clone
 
+var responseToFile = function(result, response) {
+        if (result instanceof Error) {
+            console.error('Error: ' + util.format(response.message));
+        } else {
+            //console.error("Wrote %s", csvfile);
+            //fs.writeFileSync(csvfile, result);
+            //csv2console(csvfile, headers);
+	    fs.writeFile('./index2.html',result);
+        }
+    };
+
 if(require.main == module) {
     program
     .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
     .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
+    .option('-u, --url <http_url>', 'URL of html file')
     .parse(process.argv);
-    var checkJson = checkHtmlFile(program.file, program.checks);
-    var outJson = JSON.stringify(checkJson, null, 4);
-    console.log(outJson);
+    if (program.url) {
+	//var rest = restler.get(program.url)
+	//fs.writeFile('./index2.html',restler.get(program.url));
+	//console.log(restler.get(program.url,'utf8'));
+	//end restler functionality
+//	    console.log('url');
+	//var checkJson = checkHtmlFile
+	restler.get(program.url).on('complete', responseToFile);
+    } else {
+	if (program.file) {
+	    var checkJson = checkHtmlFile(program.file, program.checks);
+	    var outJson = JSON.stringify(checkJson, null, 4);
+	    console.log('file');
+	    console.log(outJson);
+	}
+    }//end url else
 }else {
     exports.checkHtmlFile = checkHtmlFile;
 }
