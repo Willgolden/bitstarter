@@ -68,11 +68,11 @@ var responseToFile = function(result, response) {
         if (result instanceof Error) {
             console.error('Error: ' + util.format(response.message));
         } else {
-            //console.error("Wrote %s", csvfile);
-            //fs.writeFileSync(csvfile, result);
-            //csv2console(csvfile, headers);
+            //
+            //
+            //
 	    fs.writeFile('./index2.html',result);
-	    var checkJson = checkHtmlFile(program.file, program.checks);
+	    var checkJson = checkHtmlFile('./index2.html', program.checks);
 	    var outJson = JSON.stringify(checkJson, null, 4);
 	    console.log(outJson);
         }
