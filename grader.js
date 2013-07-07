@@ -72,6 +72,9 @@ var responseToFile = function(result, response) {
             //fs.writeFileSync(csvfile, result);
             //csv2console(csvfile, headers);
 	    fs.writeFile('./index2.html',result);
+	    var checkJson = checkHtmlFile(program.file, program.checks);
+	    var outJson = JSON.stringify(checkJson, null, 4);
+	    console.log(outJson);
         }
     };
 
@@ -82,12 +85,6 @@ if(require.main == module) {
     .option('-u, --url <http_url>', 'URL of html file')
     .parse(process.argv);
     if (program.url) {
-	//var rest = restler.get(program.url)
-	//fs.writeFile('./index2.html',restler.get(program.url));
-	//console.log(restler.get(program.url,'utf8'));
-	//end restler functionality
-//	    console.log('url');
-	//var checkJson = checkHtmlFile
 	restler.get(program.url).on('complete', responseToFile);
     } else {
 	if (program.file) {
